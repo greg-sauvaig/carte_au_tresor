@@ -18,7 +18,7 @@ class Player extends React.Component {
   render () { 
   	let className = this.getClassOrientation();
     return (
-      <StyledPlayer className={className} name={this.props.name} treasureCount={this.props.treasureCount} orientation={this.props.orientation} />
+      <StyledPlayer className={className[this.props.name]} name={this.props.name} treasureCount={this.props.treasureCount} orientation={this.props.orientation} />
     );
   }
 }

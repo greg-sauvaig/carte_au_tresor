@@ -32,12 +32,13 @@ const useMap = () => {
 	const [map, setMap] = useState({stage: genStage()});
 	const randomMap = () => ({ stage: genStage()});
   const parseFileLoadMap = (content) => {
-    const lines = content.split("\r\n");
+    let lines = content.split(/\r?\n/);
     let mapLine = lines.shift().split(' - ');
     window.mapLine = mapLine;
-    if ( !mapLine[0].match('C') || parseInt(mapLine[1], 10) < 1 || parseInt(mapLine[2], 10) < 1) {
+    if (!mapLine[0].match('C') || parseInt(mapLine[1], 10) < 1 || parseInt(mapLine[2], 10) < 1) {
       alert('error');
     }
+    console.log(mapLine);
     let board = {
       width: parseInt(mapLine[1], 10),
       height: parseInt(mapLine[2], 10),

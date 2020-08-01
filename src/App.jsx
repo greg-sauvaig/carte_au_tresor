@@ -12,14 +12,24 @@ const App = () => {
   return (
     <div className="App">
       <div className="App-menu">
-        <FileButton text={"Load Map File"} onLoad={parseFileLoadMap}/>
-        <button className="button" onClick={() => setMap(randomMap)}>
+        <FileButton
+          text={"Load Map File"}
+          onLoad={parseFileLoadMap}
+        />
+        <button
+          className="button"
+          onClick={() => setMap(randomMap)}
+        >
           <p>load random map</p>
         </button>
       </div>
       <div className="App-content">
         <div className="score" />
-        <Map stage={map.stage} height={map.stage && map.stage.length} width={map.stage[0] && map.stage[0].length}/>
+        <Map
+          stage={map.stage}
+          height={map.stage && map.stage.length}
+          width={map.stage[0] && map.stage[0].length}
+        />
       </div>
       <div className="App-control">
         <button className="button">
