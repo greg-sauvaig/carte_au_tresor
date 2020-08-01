@@ -1,0 +1,207 @@
+:root {
+  --primary: #22D2A0;
+  --secondary: #192824;
+  --background: #192824;
+  --green: #1FC11B;
+  --yellow: #FFD913;
+  --orange: #FF9C55;
+  --red: #FF5555;
+} 
+
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: radial-gradient(var(--secondary) 30%, var(--background) 30%);
+  background-size: 2px 3px;
+  color: var(--primary);
+}
+
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-content {
+  background-color: var(--secondary);
+  min-height: calc(100vh - 50px);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-around;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 20px 0;
+}
+.App-menu {
+  padding: 0 15px;
+  background-color:  var(--secondary);
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1em;
+  color: white;
+}
+.App-control {
+  padding: 0 15px;
+  background-color: var(--secondary);
+  height: 100px;
+  width: calc(100vw - 0px);
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+.App-link {
+  color: #61dafb;
+}
+.score {
+  width: 120px;
+  padding: 4px;
+  background: black;
+  min-height: 10px;
+  margin: 0 20px;
+}
+
+.hidden{
+  display: none;
+}
+@keyframes bottomWalk{
+  from {background-position: 0px 0px;}
+  to {background-position: -64px 0px;}
+}
+@-webkit-keyframes bottomWalk
+{
+  from {background-position: 0px 0px;}
+  to {background-position: -64px 0px;}
+}
+.bottom-walking {
+  animation: bottomWalk 2s steps(3) infinite;
+}
+
+@keyframes rightWalk{
+  from {background-position: 0px -32px;}
+  to {background-position: -50px -32px;}
+}
+@-webkit-keyframes rightWalk
+{
+  from {background-position: 0px -32px;}
+  to {background-position: -50px -32px;}
+}
+.right-walking {
+  animation: rightWalk 2s steps(3) infinite;
+}
+@keyframes topWalk{
+  from {background-position: 0px -48px; }
+  to {background-position: -50px -48px; }
+}
+@-webkit-keyframes topWalk
+{
+  from {background-position: 0px -48px;}
+  to {background-position: -50px -48px; }
+}
+.top-walking {
+  animation: topWalk 2s steps(3) infinite;
+}
+@keyframes leftWalk{
+  from {background-position: 0% 14%; }
+  to {background-position: 36% 14%; }
+}
+@-webkit-keyframes leftWalk
+{
+  from {background-position: 0% 14%; }
+  to {background-position: 36% 14%; }
+}
+.left-walking {
+  animation: leftWalk 2s steps(3) infinite;
+}
+.button {
+  background-color: var(--background);
+  display: block;
+  cursor: pointer;
+  padding: 10px 15px;
+  margin: 0 auto;
+  border: 3px solid var(--primary);
+  color: var(--primary);
+  box-shadow: 2px -2px 0 -3px var(--background), 2px -2px var(--green),
+      4px -4px 0 -3px var(--background), 4px -4px var(--yellow);
+}
+
+.button:hover {
+  animation: shadow-wave 1s ease forwards;
+}
+.button p {
+  color: inherit;
+}
+
+@keyframes shadow-wave {
+  0% {
+    border: 3px solid var(--primary);
+    color: var(--primary);
+    box-shadow: 2px -2px 0 -3px var(--background), 2px -2px var(--green),
+      4px -4px 0 -3px var(--background), 4px -4px var(--yellow);
+  }
+  20% {
+    border: 3px solid var(--red);
+    color: var(--red);
+    box-shadow: 10px -10px 0 -3px var(--background), 10px -10px var(--primary),
+      20px -20px 0 -3px var(--background), 20px -20px var(--green);
+  }
+  40% {
+    border: 3px solid var(--orange);
+    color: var(--orange);
+    box-shadow: 10px -10px 0 -3px var(--background), 10px -10px var(--red),
+      20px -20px 0 -3px var(--background), 20px -20px var(--primary);
+  }
+  60% {
+    border: 3px solid var(--yellow);
+    color: var(--yellow);
+    box-shadow: 10px -10px 0 -3px var(--background), 10px -10px var(--orange),
+      20px -20px 0 -3px var(--background), 20px -20px var(--red);
+  }
+  80% {
+    border: 3px solid var(--green);
+    color: var(--green);
+    box-shadow: 10px -10px 0 -3px var(--background), 10px -10px var(--yellow),
+      20px -20px 0 -3px var(--background), 20px -20px var(--orange);
+  }
+  100% {
+    border: 3px solid var(--primary);
+    color: var(--primary);
+    box-shadow: 10px -10px 0 -3px var(--background), 10px -10px var(--green),
+      20px -20px 0 -3px var(--background), 20px -20px var(--yellow);
+  }
+  
+}
+
+.button p {
+  font-size: 1em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.button h2 {
+  font-size: 14px;
+  font-weight: normal;
+}
