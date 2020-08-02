@@ -1,20 +1,56 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Map from './components/Map';
+import Board from './components/Board';
 import useMap from './hooks/useMap';
+import useInterval from './hooks/useInterval';
+import useGameState from './hooks/useGameState';
 import FileButton from './components/FileButton';
+import StartButton from './components/StartButton';
+import ScoreBoard from './components/ScoreBoard';
 
 const App = () => {
 
-  const [map, setMap, randomMap, parseFileLoadMap] = useMap();
+  const [map, setMap, randomMap, parseFileLoadMap, updatePlayerPos] = useMap();
+  const [dropTime, setDropTime] = useGameState();
+  const next = () => {
+    updatePlayerPos(map);
+  }
+  useInterval(
+    () => {
+      next();
+    },
+    dropTime
+  );
+
+  const startPause = (dropTime) => {
+    if (dropTime === null) {
+      return setDropTime(10);
+    }
+    setDropTime(null)
+  }
+
+  const fileLoad = (content) => {
+    setDropTime(null);
+    return parseFileLoadMap(content);
+  }
+
+  const scoreBoard =  {
+    map: {
+      x: map.width,
+      y: map.height
+    },
+    treasures: map.treasures,
+    mountains: map.mountains,
+    players: map.players,
+  }
 
   return (
     <div className="App">
       <div className="App-menu">
         <FileButton
           text={"Load Map File"}
-          onLoad={parseFileLoadMap}
+          onLoad={fileLoad}
         />
         <button
           className="button"
@@ -24,20 +60,16 @@ const App = () => {
         </button>
       </div>
       <div className="App-content">
-        <div className="score" />
-        <Map
-          stage={map.stage}
-          height={map.stage && map.stage.length}
-          width={map.stage[0] && map.stage[0].length}
-        />
+        <ScoreBoard {...scoreBoard} />
+        <Board {...map} />
       </div>
       <div className="App-control">
-        <button className="button">
-          <p>start/play</p>
-        </button>
-        <button className="button">
-          <p>pause</p>
-        </button>
+
+        <StartButton
+          text={dropTime === null ? "start" : "stop"}
+          start={() => startPause(dropTime)}
+        />
+
         <button className="button">
           <p>fastforward</p>
         </button>

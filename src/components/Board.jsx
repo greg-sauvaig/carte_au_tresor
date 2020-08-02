@@ -2,7 +2,7 @@ import React from "react";
 import { StyledMap } from './StyledMap';
 import Cell from './Cell';
 
-class Map extends React.Component {
+class Board extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -15,7 +15,6 @@ class Map extends React.Component {
           this.props.stage.map(
             row => row.map(
               (cell, x) => {
-                console.log(cell.player);
                 return (<Cell type={cell.type} treasure={cell.treasure} key={x} player={cell.player}/>);
               }
             )
@@ -26,4 +25,4 @@ class Map extends React.Component {
   }
 }
 
-export default React.memo(Map);
+export default Board;

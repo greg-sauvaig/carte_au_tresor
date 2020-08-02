@@ -205,3 +205,27 @@ body {
   font-size: 14px;
   font-weight: normal;
 }
+.player {
+  background: url('/public/chars.png');
+  background-position: 0 0;
+  background-size: 192px;
+  width: 16px;
+  height: 16px;
+  user-select: none;
+  padding: 1px;
+  min-height: 16px;
+  min-width: 16px;
+  position: relative;
+}
+.player.top {
+  background-position: 0px 80px !important;
+}
+.player.right {
+  background-position: 0 95px !important;
+}
+.player.bottom {
+  background-position: 0 0 !important;
+}
+.player.left {
+  background-position: 0 -17px !important;
+}

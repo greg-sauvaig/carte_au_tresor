@@ -12,7 +12,7 @@ class Cell extends React.Component {
       <StyledCell type={this.props.type} treasure={this.props.treasure}>
       	{
       		this.props.player &&
-      		<Player props={{...this.props.player}} /> 
+      		<Player {...this.props.player} /> 
       	}
       </StyledCell>
     );
