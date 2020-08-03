@@ -2,14 +2,14 @@ import React from "react";
 import { StyledScoreBoard } from './StyledScoreBoard';
 
 class ScoreBoard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   orderedPlayers(players) {
-    return players.sort( (a, b) => a.index > b.index );
+    return players.sort( (a, b) => a.id > b.id );
   }
   render () {
-    const players = this.orderedPlayers(this.props.players);
+    let players = [];
+    if (this.props.players && this.props.players.length) {
+      players = this.orderedPlayers(this.props.players);
+    }
     return (
       this.props.map.x + this.props.map.y > 0 &&
       <div>

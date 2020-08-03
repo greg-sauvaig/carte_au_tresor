@@ -3,10 +3,6 @@ import { StyledCell } from './StyledCell';
 import Player from './Player';
 
 class Cell extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render () { 
     return (
       <StyledCell type={this.props.type} treasure={this.props.treasure}>
@@ -19,4 +15,4 @@ class Cell extends React.Component {
   }
 }
 
-export default React.memo(Cell);
+export default Cell;

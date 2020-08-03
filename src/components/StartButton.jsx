@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { StyledButton } from './StyledButton';
 
 class StartButton extends React.Component {
@@ -7,12 +7,12 @@ class StartButton extends React.Component {
     this.handleClickBtn = this.handleClickBtn.bind(this);
   }
   handleClickBtn() {
-    this.props.start();
+    this.props.onStart();
   }
   render() {
     return (
       <StyledButton 
-        className="button"
+      className={`button${this.props.start === null ? ' disabled' : ''}`}
         onClick={this.handleClickBtn}
       >
         <p>

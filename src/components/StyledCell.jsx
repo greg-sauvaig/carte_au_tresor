@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const StyledCell = styled.div`
 	background: ${
-		props => props.type == 'p' ?
+		props => props.type === 'p' ?
 		'green' :
 		'grey'
 	};

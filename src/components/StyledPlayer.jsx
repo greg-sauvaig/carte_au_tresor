@@ -16,7 +16,9 @@ export const StyledPlayer = styled.div`
 		top: 0px;
 		left: 0px;
 		${
-			props => props.treasure && `content: "${props.treasure}"` 
+			props => props.treasure && `content: "${props.treasure}";` 
 		}
 	}
+	border-style: solid;
+	animation: glow .5s linear;
 `

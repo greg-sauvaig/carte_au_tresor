@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
 const useGameState = () => {
-  const [dropTime, setDropTime] = useState(null);
-  return [dropTime, setDropTime];
+  const [start, setStart] = useState(null);
+  return [start, setStart];
 };
 
 export default useGameState;

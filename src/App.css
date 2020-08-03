@@ -38,7 +38,7 @@ body {
 
 .App-content {
   background-color: var(--secondary);
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 100px);
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -61,7 +61,7 @@ body {
 .App-control {
   padding: 0 15px;
   background-color: var(--secondary);
-  height: 100px;
+  height: 70px;
   width: calc(100vw - 0px);
   position: fixed;
   bottom: 0px;
@@ -136,6 +136,73 @@ body {
 .left-walking {
   animation: leftWalk 2s steps(3) infinite;
 }
+
+@keyframes glow{
+  0% {border-color: red; border-width: 3px; }
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@-webkit-keyframes glow
+{
+  0% {border-color: red; border-width: 3px;}
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@keyframes glowt{
+  0% {border-color: red; border-width: 3px; }
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@-webkit-keyframes glowt
+{
+  0% {border-color: red; border-width: 3px;}
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@keyframes glowr{
+  0% {border-color: red; border-width: 3px; }
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@-webkit-keyframes glowr
+{
+  0% {border-color: red; border-width: 3px;}
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@keyframes glowb{
+  0% {border-color: red; border-width: 3px; }
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@-webkit-keyframes glowb
+{
+  0% {border-color: red; border-width: 3px;}
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@keyframes glowl{
+  0% {border-color: red; border-width: 3px; }
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+@-webkit-keyframes glowl
+{
+  0% {border-color: red; border-width: 3px;}
+  25% {border-color: transparent; border-width: 1px; }
+  75% {border-color: red; border-width: 3px;}
+  100% {border-color: transparent; border-width: 1px;}
+}
+
 .button {
   background-color: var(--background);
   display: block;
@@ -144,10 +211,18 @@ body {
   margin: 0 auto;
   border: 3px solid var(--primary);
   color: var(--primary);
-  box-shadow: 2px -2px 0 -3px var(--background), 2px -2px var(--green),
-      4px -4px 0 -3px var(--background), 4px -4px var(--yellow);
+  box-shadow: 2px -2px 0 -3px var(--background),
+    2px -2px var(--green),
+    4px -4px 0 -3px var(--background),
+    4px -4px var(--yellow);
 }
-
+.button.disabled:after {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
 .button:hover {
   animation: shadow-wave 1s ease forwards;
 }
@@ -219,13 +294,17 @@ body {
 }
 .player.top {
   background-position: 0px 80px !important;
+  animation: glowt .5s forwards;
 }
 .player.right {
   background-position: 0 95px !important;
+  animation: glowr .5s forwards;
 }
 .player.bottom {
   background-position: 0 0 !important;
+  animation: glowb .5s forwards;
 }
 .player.left {
   background-position: 0 -17px !important;
+  animation: glowl .5s forwards;
 }

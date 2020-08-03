@@ -3,10 +3,6 @@ import { StyledMap } from './StyledMap';
 import Cell from './Cell';
 
 class Board extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render () {
     return (
       this.props.height + this.props.width > 0 &&

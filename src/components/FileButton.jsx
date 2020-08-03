@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { StyledButton } from './StyledButton';
 
 class FileButton extends React.Component {
