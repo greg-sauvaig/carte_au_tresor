@@ -1,25 +1,42 @@
+/**
+ * getRandomInt to get a random integer between limit parameters
+ * 
+ * @param  {int} min a number lower limit
+ * @param  {int} max a number upper limit
+ * @return {int} a random number between min and max
+ */
 export const getRandomInt = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min +1)) + min;
 }
 
-class Counter {
+/**
+ * Class Counter to share a counter between function call
+ */
+export class Counter {
   constructor() {
     this.count = 0;
   }
   increaseCount() {
     this.count += 1;
+    return this;
   }
   getCount() {
     return this.count;
   }
   resetCount() {
     this.count = 0;
+    return this;
   }
 }
 let counter = new Counter();
 
+/**
+ * genCell to generate a random cell for the board
+ * 
+ * @return {object} a cell object { type: 'm'|'p', ?player, ?treasure }
+ */
 export const genCell = () => {
   const random = getRandomInt(1, 10);
   let cell = (random === 2 || random === 4) ? {type: 'm'} : {type: 'p'};
@@ -34,6 +51,18 @@ export const genCell = () => {
   return cell;
 }
 
+/**
+ * genCell to generate a random player for the board
+ * 
+ * @return {object} a player object sutch as {
+ *    id: {int},
+ *    name: {string},
+ *    orientation: {string}='N'|'E'|'S'|'O',
+ *    treasureCount: {int},
+ *    moves: {string},
+ *    dones: {string},
+ *  }
+ */
 export const genPlayer = () => {
   let index = counter.getCount();
   counter.increaseCount();
@@ -54,6 +83,12 @@ export const genPlayer = () => {
   };
 }
 
+/**
+ * genRow to generate an array of cell representing a row in the board
+ * 
+ * @param  {int} size of the row
+ * @return {array} the generated array containing cells 
+ */
 export const genRow = (cellNumber) => {
   let row = [];
   for (var i = 0; i < cellNumber; i++) {
@@ -62,6 +97,18 @@ export const genRow = (cellNumber) => {
   return row;
 }
 
+/**
+ * genStage to generate a random board
+ * 
+ * @return {array} the generated board {
+ *   width: {int},
+ *   height: {int},
+ *   stage: {array [row[cell]]},
+ *   treasures: {array},
+ *   mountains: {array},
+ *   players: {array},
+ * }
+ */
 export const genStage = () => {
   counter.resetCount();
   let stage = [];
@@ -84,6 +131,12 @@ export const genStage = () => {
   return board;
 }
 
+/**
+ * getTreasures to build treasure list based on map parameter
+ *
+ * @param  {array} the map containing rows and cells
+ * @return {array} the built treasure list based on map
+ */
 export const getTreasures = map => {
   let stack = [];
   for (var y = 0;  y < map.length ; y++) {
@@ -96,6 +149,12 @@ export const getTreasures = map => {
   return stack;
 };
 
+/**
+ * getMountains to build mountains list based on map parameter
+ * 
+ * @param  {array} the map containing rows and cells
+ * @return {array} the built mountains list based on map
+ */
 export const getMountains = map => {
   let stack = [];
   for (var y = 0;  y < map.length ; y++) {
@@ -108,6 +167,12 @@ export const getMountains = map => {
   return stack;
 };
 
+/**
+ * getPlayers to build players list based on map parameter
+ * 
+ * @param  {array} the map containing rows and cells
+ * @return {array} the built players list based on map
+ */
 export const getPlayers = map => {
   let stack = [];
   for (var y = 0;  y < map.length ; y++) {
@@ -120,6 +185,11 @@ export const getPlayers = map => {
   return stack;
 };
 
+/**
+ * utilitary matrix to represent all possible moves for a player
+ * based on the direction, pointing to the related x,y coordinate operation
+ * for each move.
+ */
 export const MOVES_MATRIX = {
   N: { 
     x: 0,
@@ -139,33 +209,51 @@ export const MOVES_MATRIX = {
   },
 };
 
+/**
+ * utilitary matrix to represent all possible moves for a player
+ * based on the orientation, pointing to all the possible orientation change.
+ */
 export const ORIENTATION_MATRIX = {
   N: { G: 'O', D: 'E'},
   E: { G: 'N', D: 'S'},
   S: { G: 'E', D: 'O'},
   O: { G: 'S', D: 'N'},
+  
 };
 
+/**
+ * playerCollide to say if the player 'collide' with a move restriction.
+ * A player could collide if:
+ *  - try to reach a coordinate outside the board
+ *  - try to reach a mountains cell
+ *  - try to reach a player already occupy the cell
+ *  
+ * @param  {array} the board map
+ * @param  {int} x coordinates the player want to reach
+ * @param  {int} y coordinates the player want to reach
+ * @return {boolean} player is colliding
+ */
 export const playerCollide = (map, x, y) => {
   if (x < 0 || x >= map.width) {
-    //console.log('x out of boundaries ', x);
     return true;
   }
   if (y < 0 || y >= map.height) {
-    //console.log('y out of boundaries ', y);
     return true;
   }
   if (map.stage[y][x].type === 'm') {
-    //console.log('player want to learn to climb');
     return true;
   }
   if ('player' in map.stage[y][x]) {
-    //console.log('already occupied by another player ', map.stage[y][x].player.name);
     return true;
   }
   return false;
 };
 
+/**
+ * isFinished to calculate if all the player moves have been resolved
+ * @param  {array} player object list
+ * @return {boolean} board is resolved
+ */
 export const isFinished = (players) => {
   for (var i = 0; i < players.length; i++) {
     if (players[i].moves !== '') {
@@ -175,12 +263,19 @@ export const isFinished = (players) => {
   return true;
 };
 
+/**
+ * runStep to resolve one move on the map 
+ * for the player based in the map.players list identified by the index param
+ * 
+ * @param  {array} the board to apply the moove
+ * @param  {int} player index in the player list in the board
+ * @return {array} the generated board 
+ */
 export const runStep = (map, playerIndex) => {
   let prevBoard = JSON.parse(JSON.stringify(map));
   let stage = prevBoard.stage;
   let players = prevBoard.players;
   let player = players[playerIndex];
-  //console.log('update', player.name, playerIndex);
   let moves = player.moves.split('');
   if (moves.length) {
     let move = moves.shift();
@@ -233,6 +328,12 @@ export const runStep = (map, playerIndex) => {
   };
 };
 
+/**
+ * solve to solve the board
+ *
+ * @param  {array} the board to solve
+ * @return {array} solved board
+ */
 export const solve = (map) => {
   let prev = JSON.parse(JSON.stringify(map));
   let index = 0;
@@ -243,14 +344,16 @@ export const solve = (map) => {
   return prev;
 };
 
+/**
+ * solve to solve one board step
+ *
+ * @param  {array} the board to solve
+ * @return {array} solved board
+ */
 export const resolveStep = (map, index) => {
   let prev = JSON.parse(JSON.stringify(map));
   if (!isFinished(prev.players)) {
     prev = runStep(prev, index);
   }
   return prev;
-};
-
-export const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
 };
