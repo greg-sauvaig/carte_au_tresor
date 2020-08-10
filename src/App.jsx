@@ -7,11 +7,11 @@ import useGameState from './hooks/useGameState';
 import FileButton from './components/FileButton';
 import StartButton from './components/StartButton';
 import ScoreBoard from './components/ScoreBoard';
-import { genStage, solve, resolveStep, isFinished} from './utils/helpers';
+import { genStage, solve, resolveStep, isFinished } from './utils/helpers';
 
 const App = () => {
 
-  const [map, setMap, parseFileLoadMap] = useMap();
+  const { map, setMap, parseFileLoadMap } = useMap();
   const [start, setStart] = useGameState();
   const [step, setStep] = useState(0);
 
@@ -83,6 +83,9 @@ const App = () => {
 
   useInterval(
     () => {
+      if (map.players.length < 1) {
+        setStart(null);
+      }
       tick();
       if (isFinished(map.players)) {
         setStart(null);
@@ -117,20 +120,22 @@ const App = () => {
         <Board {...map} />
       </div>
       <div className="App-control">
-        <StartButton
-          text="+"
-          onStart={() => tick()}
-          start={start}
-        />
-        <button className="button" onClick={() => play()}>
-          <p>{start === null ? '>' : '□'}</p>
-        </button>
-        <button 
-          className="button" 
-          onClick={() => onclick()}
-        >
-          <p>>></p>
-        </button>
+        <div className="App-control-bar">
+          <StartButton
+            text="+"
+            onStart={() => tick()}
+            start={start}
+          />
+          <button className="button" onClick={() => play()}>
+            <p>{start === null ? '>' : '□'}</p>
+          </button>
+          <button 
+            className="button" 
+            onClick={() => onclick()}
+          >
+            <p>>></p>
+          </button>
+        </div>
         <button
           className="button"
           onClick={() => onclickGetResult()}

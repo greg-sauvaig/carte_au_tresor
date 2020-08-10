@@ -1,0 +1,106 @@
+{
+    "height": 4,
+    "mountains": [
+        {
+            "x": 1,
+            "y": 0
+        },
+        {
+            "x": 2,
+            "y": 1
+        }
+    ],
+    "players": [
+        {
+            "dones": "",
+            "id": 0,
+            "moves": "AADADAGGA",
+            "name": "Lara",
+            "orientation": "S",
+            "treasureCount": 0,
+            "x": 1,
+            "y": 1
+        }
+    ],
+    "stage": [
+        [
+            {
+                "type": "p"
+            },
+            {
+                "type": "m"
+            },
+            {
+                "type": "p"
+            },
+            {
+                "type": "p"
+            }
+        ],
+        [
+            {
+                "type": "p"
+            },
+            {
+                "player": {
+                    "dones": "",
+                    "id": 0,
+                    "moves": "AADADAGGA",
+                    "name": "Lara",
+                    "orientation": "S",
+                    "treasureCount": 0
+                },
+                "type": "p"
+            },
+            {
+                "type": "m"
+            },
+            {
+                "type": "p"
+            }
+        ],
+        [
+            {
+                "type": "p"
+            },
+            {
+                "type": "p"
+            },
+            {
+                "type": "p"
+            },
+            {
+                "type": "p"
+            }
+        ],
+        [
+            {
+                "treasure": 2,
+                "type": "p"
+            },
+            {
+                "treasure": 3,
+                "type": "p"
+            },
+            {
+                "type": "p"
+            },
+            {
+                "type": "p"
+            }
+        ]
+    ],
+    "treasures": [
+        {
+            "nb": 2,
+            "x": 0,
+            "y": 3
+        },
+        {
+            "nb": 3,
+            "x": 1,
+            "y": 3
+        }
+    ],
+    "width": 4
+}

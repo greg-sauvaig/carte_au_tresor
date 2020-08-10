@@ -13,10 +13,21 @@ const useMap = () => {
   });
 
   const parseFileLoadMap = (content) => {
-    let lines = content.match(/[^\r\n]+/g);
+    let lines = content.match(/[^\r\n]+/g).reduce(
+      (acc, line) => {
+        if (line.charAt(0).match('[CMTA]')) {
+          acc.push(line);
+        }
+        return acc;
+      },
+      []
+    );
+
     let mapLine = lines.shift().split(' - ');
+
     if (!mapLine[0].match('C') || parseInt(mapLine[1], 10) < 1 || parseInt(mapLine[2], 10) < 1) {
       alert('error');
+      return;
     }
     let board = {
       width: parseInt(mapLine[1], 10),
@@ -33,11 +44,11 @@ const useMap = () => {
     let playersOrder = 0;
     for (var i = 0; i < lines.length; i++) {
       let line = lines[i].split(' - ');
-
       if (line[0].match('M')) {
         if (parseInt(line[1], 10) < 0 || parseInt(line[1], 10) >= board.width ||
           parseInt(line[2], 10) < 0 || parseInt(line[2], 10) >= board.height ) {
           alert('error');
+          return;
         }
         board.stage[parseInt(line[2], 10)][parseInt(line[1], 10)] = {type: 'm'};
       } else if (line[0].match('T')) {
@@ -46,6 +57,7 @@ const useMap = () => {
           parseInt(line[3], 10) < 1
         ) {
           alert('error');
+          return;
         }
         board.stage[parseInt(line[2], 10)][parseInt(line[1], 10)] = {
           type: board.stage[parseInt(line[2], 10)][parseInt(line[1], 10)].type,
@@ -53,7 +65,6 @@ const useMap = () => {
         };
         board.stage[parseInt(line[2], 10)][parseInt(line[1], 10)] = {
           ...board.stage[parseInt(line[2], 10)][parseInt(line[1], 10)],
-          
         };
       } else if (line[0].match('A')) {
         if (!line[1].match('[a-zA-Z]+') ||
@@ -63,6 +74,7 @@ const useMap = () => {
           !line[5].match('[AGD].*')
         ) {
           alert('error');
+          return;
         }
         board.stage[parseInt(line[3], 10)][parseInt(line[2], 10)] = {
           ...board.stage[parseInt(line[3], 10)][parseInt(line[2], 10)],
@@ -84,7 +96,7 @@ const useMap = () => {
     setMap(board);
   }
 
-	return [map, setMap, parseFileLoadMap];
+	return {map, setMap, parseFileLoadMap};
 }
 
 export default useMap;

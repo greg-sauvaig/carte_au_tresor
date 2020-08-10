@@ -308,3 +308,7 @@ body {
   background-position: 0 -17px !important;
   animation: glowl .5s forwards;
 }
+.App-control-bar{
+  display: flex;
+  flex-flow: row;
+}

@@ -5,7 +5,13 @@ import {
   genPlayer,
   genRow,
   genStage,
-  getTreasures
+  getTreasures,
+  getMountains,
+  getPlayers,
+  playerCollide,
+  isFinished,
+  runStep,
+  solve
 } from './helpers'
 
 expect.extend({
@@ -97,7 +103,7 @@ describe('genStage', () => {
     expect(board).toHaveProperty('height');
     expect(board.height).toBeGreaterThan(-1);
     expect(board).toHaveProperty('stage');
-    expect(board.stage.length).toBeGreaterThan(1);
+    expect(board.stage.length).toBeGreaterThan(0);
     expect(typeof board.stage).toBe(typeof []);
     expect(board).toHaveProperty('treasures');
     expect(typeof board.treasures).toBe(typeof []);
@@ -135,4 +141,422 @@ describe('getTreasures', () => {
       { x: 1, y: 3, nb: 1}
     ]);
   })
+});
+
+describe('getMountains', () => {
+  it('should generate a valid mountain array', () => {
+    let mountains = getMountains([]);
+    expect(mountains).toEqual([]);
+    mountains = getMountains([[{},{},{}], [{},{},{}]]);
+    expect(mountains).toEqual([]);
+    mountains = getMountains([
+      [{type: 'p'}, {type: 'm'}, {type: 'p'}, {type: 'p'}, {type: 'm'}, {type: 'p'}],
+      [{type: 'p'}, {type: 'p'}, {type: 'p'}, {type: 'm'}, {type: 'm'}, {type: 'p'}],
+    ]);
+    expect(mountains).toEqual([
+      {x: 1, y:0 },
+      {x: 4, y:0 },
+      {x: 3, y:1 },
+      {x: 4, y:1 },
+    ]);
+    mountains = getMountains([
+      [{}, {type: 'm'}, {type: 'p'}, {type: 'p'}, {}, {type: 'p'}],
+      [{type: 'p'}, {}, {type: 'p'}, {type: 'm'}, {}, {type: 'p'}],
+    ]);
+    expect(mountains).toEqual([
+      {x: 1, y:0 },
+      {x: 3, y:1 },
+    ]);
+  })
+});
+
+describe('getPlayers', () => {
+  it('should generate a valid player array', () => {
+    const player1 = {
+      id: 0,
+      name: 'paul',
+      orientation: 'S',
+      treasureCount: 0,
+      moves: 'AAAADDGG',
+      dones: '',
+    };
+    const player2 = {
+      id: 1,
+      name: 'alia',
+      orientation: 'N',
+      treasureCount: 0,
+      moves: 'who care no control',
+      dones: '',
+    };
+    let players = getPlayers([]);
+    expect(players).toEqual([]);
+    players = getPlayers([[{},{},{}], [{},{},{}]]);
+    expect(players).toEqual([]);
+    players = getPlayers([
+      [{type: 'p'}, {type: 'm'}, {type: 'p', player: { x: 2, y: 0, ...player1 }}, {type: 'p'}, {type: 'm'}, {type: 'p'}],
+      [{type: 'p', player: { x: 0, y: 1, ...player2 }}, {type: 'p'}, {type: 'p'}, {type: 'm'}, {type: 'm'}, {type: 'p'}],
+    ]);
+    expect(players).toEqual([
+      { x: 2, y: 0, ...player1 },
+      { x: 0, y: 1, ...player2 }
+    ]);
+    players = getPlayers([
+      [{type: 'p'}, {type: 'm'}, {type: 'p', player: { x: 2, y: 0, ...player2 }}, {type: 'p'}, {type: 'm'}, {type: 'p'}],
+      [{type: 'p', player: { x: 0, y: 1, ...player1 }}, {type: 'p'}, {type: 'p'}, {type: 'm'}, {type: 'm'}, {type: 'p'}],
+    ]);
+    expect(players).toEqual([
+      { x: 2, y: 0, ...player2 },
+      { x: 0, y: 1, ...player1 }
+    ]);
+  })
+});
+
+describe('playerCollide', () => {
+  it('should correctly verify constraint that are restricting user mooves', () => {
+    let map = {
+      width: 0,
+      height: 0,
+      stage: []
+    };
+    let collide = playerCollide(map, 0, 0);
+    expect(collide).toBe(true);
+    collide = playerCollide(map, 100, -3590);
+    expect(collide).toBe(true);
+    collide = playerCollide(map, 321654987254361, -65498756456421);
+    expect(collide).toBe(true);
+    map = {
+      width: 2,
+      height: 1,
+      stage: [[{type: 'm'}, {type: 'p', player: {} }]]
+    };
+    collide = playerCollide(map, 0, 0);
+    expect(collide).toBe(true);
+    map = {
+      width: 2,
+      height: 2,
+      stage: [
+        [
+          {type: 'm'}, {type: 'p', player: {}},
+        ],
+        [
+          {type: 'm'}, {type: 'p', player: {}},
+        ]
+      ]
+    };
+    collide = playerCollide(map, 1, 1);
+    expect(collide).toBe(true);
+    map = {
+      width: 2,
+      height: 1,
+      stage: [[{type: 'p'}, {type: 'p', player: {} }]]
+    };
+    collide = playerCollide(map, 0, 0);
+    expect(collide).toBe(false);
+  })
+});
+
+describe('isFinished', () => {
+  it('should correctly verify if users have mooves', () => {
+    let players = [];
+    let isFinish = false;
+    let valuesFalse = [
+      () => {},
+      false,
+      null,
+      undefined,
+      1,
+      'le janbom c\'est bon, mais les carottes c\'est fantastique',
+      'AAAADDGG' 
+    ];
+    valuesFalse.forEach(moveValue => {
+      players = [
+        { moves: '' },
+        { moves: '' },
+        { moves: '' },
+        { moves: '' },
+        { moves: moveValue },
+        { moves: '' },
+      ];
+      isFinish = isFinished(players);
+      expect(isFinish).toBe(false);
+    });
+    players = [];
+    isFinish = isFinished(players);
+    expect(isFinish).toBe(true);
+    players = [{ moves: '' }];
+    isFinish = isFinished(players);
+    expect(isFinish).toBe(true);
+  });
+});
+
+describe('runStep', () => {
+  it('should correctly apply a move to the board and correctly update the returned board', () => {
+    const board = {
+      width: 0,
+      height: 0,
+      stage: [],
+      treasures: [],
+      mountains: [],
+      players: [],
+    };
+    let resultBoard = runStep(board, 0);
+    expect(resultBoard).toEqual(board);
+    const board1 = {
+      width: 2,
+      height: 2,
+      stage: [
+        [
+          { type: 'p', treasure: 2 },
+          {
+            type: 'p',
+            player: {
+              x: 1,
+              y: 0,
+              id: 0,
+              name: 'alia',
+              orientation: 'N',
+              treasureCount: 0,
+              moves: 'GAGAGAGAD',
+              dones: '',
+            }
+          },
+        ],
+        [
+          {
+            type: 'p',
+            player: {
+              x: 0,
+              y: 1,
+              id: 1,
+              name: 'paul',
+              orientation: 'S',
+              treasureCount: 4,
+              moves: 'GAGAGAGAD',
+              dones: '',
+            }
+          },
+          { type: 'm' },
+        ]
+      ],
+      treasures: [{
+        x: 0,
+        y: 0,
+        nb: 2,
+      }],
+      mountains: [{
+        x: 1,
+        y: 1,
+      }],
+      players: [{
+        x: 1,
+        y: 0,
+        id: 0,
+        name: 'alia',
+        orientation: 'N',
+        treasureCount: 0,
+        moves: 'GAGAGAGAD',
+        dones: '',
+      },
+      {
+        x: 0,
+        y: 1,
+        id: 1,
+        name: 'paul',
+        orientation: 'S',
+        treasureCount: 4,
+        moves: 'GAGAGAGAD',
+        dones: '',
+      }],
+    };
+    let expected = JSON.parse(JSON.stringify(board1));
+    expected.players[0] = {
+      x: 1,
+      y: 0,
+      id: 0,
+      name: 'alia',
+      orientation: 'O',
+      treasureCount: 0,
+      moves: 'AGAGAGAD',
+      dones: 'G',
+    };
+    expected.stage[0][1].player.orientation = 'O';
+    expected.stage[0][1].player.moves = 'AGAGAGAD';
+    expected.stage[0][1].player.dones = 'G';
+    const resultBoard1 = runStep(board1, 0);
+    expect(resultBoard1).toStrictEqual(expected);
+  });
+});
+
+describe('runStep', () => {
+  it('should correctly apply a move to the board and correctly update the returned board', () => {
+    const board = {
+      width: 0,
+      height: 0,
+      stage: [],
+      treasures: [],
+      mountains: [],
+      players: [],
+    };
+    let resultBoard = runStep(board, 0);
+    expect(resultBoard).toEqual(board);
+    const board1 = {
+      width: 2,
+      height: 2,
+      stage: [
+        [
+          { type: 'p', treasure: 2 },
+          {
+            type: 'p',
+            player: {
+              x: 1,
+              y: 0,
+              id: 0,
+              name: 'alia',
+              orientation: 'N',
+              treasureCount: 0,
+              moves: 'GAGAGAGAD',
+              dones: '',
+            }
+          },
+        ],
+        [
+          {
+            type: 'p',
+            player: {
+              x: 0,
+              y: 1,
+              id: 1,
+              name: 'paul',
+              orientation: 'S',
+              treasureCount: 4,
+              moves: 'GAGAGAGAD',
+              dones: '',
+            }
+          },
+          { type: 'm' },
+        ]
+      ],
+      treasures: [{
+        x: 0,
+        y: 0,
+        nb: 2,
+      }],
+      mountains: [{
+        x: 1,
+        y: 1,
+      }],
+      players: [{
+        x: 1,
+        y: 0,
+        id: 0,
+        name: 'alia',
+        orientation: 'N',
+        treasureCount: 0,
+        moves: 'GAGAGAGAD',
+        dones: '',
+      },
+      {
+        x: 0,
+        y: 1,
+        id: 1,
+        name: 'paul',
+        orientation: 'S',
+        treasureCount: 4,
+        moves: 'GAGAGAGAD',
+        dones: '',
+      }],
+    };
+    let expected = JSON.parse(JSON.stringify(board1));
+    expected.players[0] = {
+      x: 1,
+      y: 0,
+      id: 0,
+      name: 'alia',
+      orientation: 'O',
+      treasureCount: 0,
+      moves: 'AGAGAGAD',
+      dones: 'G',
+    };
+    expected.stage[0][1].player.orientation = 'O';
+    expected.stage[0][1].player.moves = 'AGAGAGAD';
+    expected.stage[0][1].player.dones = 'G';
+    const resultBoard1 = runStep(board1, 0);
+    expect(resultBoard1).toStrictEqual(expected);
+  });
+});
+
+describe('solve', () => {
+  it('should correctly apply all moves to the board and correctly update the returned board', () => {
+    const board = {
+      width: 2,
+      height: 2,
+      stage: [
+        [
+          { type: 'p', treasure: 2 },
+          {
+            type: 'p',
+            player: {
+              x: 1,
+              y: 0,
+              id: 0,
+              name: 'alia',
+              orientation: 'N',
+              treasureCount: 0,
+              moves: 'GAGAGAGAD',
+              dones: '',
+            }
+          },
+        ],
+        [
+          { type: 'p' },
+          { type: 'm' },
+        ]
+      ],
+      treasures: [{
+        x: 0,
+        y: 0,
+        nb: 2,
+      }],
+      mountains: [{
+        x: 1,
+        y: 1,
+      }],
+      players: [{
+        x: 1,
+        y: 0,
+        id: 0,
+        name: 'alia',
+        orientation: 'N',
+        treasureCount: 0,
+        moves: 'GAGAGAGAD',
+        dones: '',
+      }],
+    };
+    let expected = JSON.parse(JSON.stringify(board));
+    expected.players[0] = {
+      x: 0,
+      y: 0,
+      id: 0,
+      name: 'alia',
+      orientation: 'E',
+      treasureCount: 2,
+      moves: '',
+      dones: 'GAGAGAGAD',
+    };
+    expected.stage[0][0].player = {
+      x: 0,
+      y: 0,
+      id: 0,
+      name: 'alia',
+      orientation: 'E',
+      treasureCount: 2,
+      moves: '',
+      dones: 'GAGAGAGAD',
+    }
+    expected.treasures = [];
+    delete expected.stage[0][0].treasure;
+    delete expected.stage[0][1].player;
+    const resultBoard = solve(board);
+    expect(resultBoard).toEqual(expected);
+  });
 });

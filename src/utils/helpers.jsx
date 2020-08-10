@@ -218,7 +218,6 @@ export const ORIENTATION_MATRIX = {
   E: { G: 'N', D: 'S'},
   S: { G: 'E', D: 'O'},
   O: { G: 'S', D: 'N'},
-  
 };
 
 /**
@@ -275,9 +274,12 @@ export const runStep = (map, playerIndex) => {
   let prevBoard = JSON.parse(JSON.stringify(map));
   let stage = prevBoard.stage;
   let players = prevBoard.players;
+  if (typeof players[playerIndex] === 'undefined') {
+    return prevBoard;
+  }
   let player = players[playerIndex];
   let moves = player.moves.split('');
-  if (moves.length) {
+  if (moves.length > 0) {
     let move = moves.shift();
     moves = moves.join('');
     player.dones = `${player.dones}${move}`;
