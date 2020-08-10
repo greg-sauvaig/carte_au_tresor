@@ -1,3 +1,5 @@
+![alt text](https://res.cloudinary.com/tatemcatering/image/upload/v1597081164/tuto.gif)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ### Docker
